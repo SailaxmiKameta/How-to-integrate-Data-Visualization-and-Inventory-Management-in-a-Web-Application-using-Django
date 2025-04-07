@@ -4,7 +4,7 @@ from django.contrib import messages
 from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
+from .forms import SalesForm  
 
 
 @ratelimit(key="ip", rate="5/m", method="POST", block=True)  # Rate limit to prevent brute-force
@@ -58,3 +58,22 @@ def register(request):
         return redirect('login')
 
     return render(request, 'inventory_dashboard/register.html')
+
+
+def add_sales(request):
+    if request.method == 'POST':
+        form = SalesForm(request.POST)
+        if form.is_valid():
+            sale = form.save(commit=False)
+
+            # Automatically compute the day_of_week from the selected date
+            if sale.date:
+                sale.day_of_week = sale.date.weekday() + 1  # Monday = 0 → Sunday = 7
+
+            sale.save()
+            messages.success(request, 'Sales data has been successfully added!')
+            return redirect('add_sales')  # Or your desired redirect
+    else:
+        form = SalesForm()
+    return render(request, 'inventory_dashboard/add_sales.html', {'form': form})
+

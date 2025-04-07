@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inventory_dashboard',  
+    'widget_tweaks',
 ]
 
 AUTH_USER_MODEL = "inventory_dashboard.StoreManager"
