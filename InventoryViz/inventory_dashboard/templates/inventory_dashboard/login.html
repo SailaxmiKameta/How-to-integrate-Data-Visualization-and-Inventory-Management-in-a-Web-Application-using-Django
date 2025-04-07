@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Login</title>
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f4; margin: 0;">
+
+    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); width: 300px; text-align: center;">
+        <h2 style="margin-bottom: 20px; color: #333;">Manager Login</h2>
+
+        {% for message in messages %}
+            <p style="color: red;">{{ message }}</p>
+        {% endfor %}
+
+        <form method="post" style="display: flex; flex-direction: column; gap: 15px;">
+            {% csrf_token %}
+
+            <input type="text" name="username" placeholder="Username" required 
+                style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+
+            <input type="password" name="password" placeholder="Password" required 
+                style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+
+            <button type="submit" 
+                style="background-color: #007bff; color: white; padding: 10px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+                Login
+            </button>
+        </form>
+
+        <p style="margin-top: 10px; text-align: center;">
+            New here? <a href="{% url 'register' %}" style="color: #007bff; text-decoration: none;">Create an account</a>
+        </p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+</head>
+<body style="margin: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+
+    <!-- Navigation Bar -->
+    <nav style="background-color: #007bff; padding: 15px; text-align: center; color: white; font-size: 20px;">
+        Manager Dashboard
+    </nav>
+
+    <!-- Main Container -->
+    <div style="display: flex; justify-content: center; align-items: center; height: 80vh; flex-direction: column;">
+
+        <h2 style="color: #333;">Welcome, Manager!</h2>
+
+        
+        <!-- Logout Button -->
+        <a href="{% url 'logout' %}" style="margin-top: 20px; text-decoration: none;">
+            <button style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+                Logout
+            </button>
+        </a>
+
+    </div>
+
+</body>
+</html>
