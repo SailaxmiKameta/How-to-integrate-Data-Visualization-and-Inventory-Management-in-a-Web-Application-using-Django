@@ -5,6 +5,9 @@ from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import SalesForm  
+from .models import Sales  
+from datetime import datetime  
+from django.urls import reverse
 
 
 @ratelimit(key="ip", rate="5/m", method="POST", block=True)  # Rate limit to prevent brute-force
@@ -77,3 +80,36 @@ def add_sales(request):
         form = SalesForm()
     return render(request, 'inventory_dashboard/add_sales.html', {'form': form})
 
+
+def edit_sales(request, store, date):
+    try:
+        date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+    except ValueError:
+        return render(request, 'inventory_dashboard/error.html', {
+            'error_message': 'Invalid date format. Please use YYYY-MM-DD.'
+        })
+
+    sales = Sales.objects.filter(store=store, date=date_obj)
+
+    if not sales.exists():
+        return render(request, 'inventory_dashboard/error.html', {
+            'error_message': 'No sales data found for the given store and date.'
+        })
+
+    sale = sales.first()
+
+    if request.method == 'POST':
+        form = SalesForm(request.POST, instance=sale)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Sales data updated successfully!") 
+            return redirect(reverse('edit_sales', kwargs={'store': store, 'date': date}))
+    else:
+        form = SalesForm(instance=sale)
+
+    return render(request, 'inventory_dashboard/edit_sales.html', {
+        'form': form,
+        'sales': sale,
+        'store': store,
+        'date': date,
+    })

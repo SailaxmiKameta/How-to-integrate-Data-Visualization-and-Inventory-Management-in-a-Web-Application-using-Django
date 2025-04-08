@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Sales Data</title>
+    <style>
+        /* Style for the notification */
+        .notification {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Sales Data</h1>
+    <form method="POST" action="{% url 'edit_sales' store date %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Sales</button>
+    </form>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: green;">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Notification div -->
+    <div id="notification" class="notification">Sales data updated successfully!</div>
+
+    {% if messages %}
+    <script>
+        // Show the notification if there are success messages
+        const notification = document.getElementById("notification");
+        notification.style.display = "block";  // Show the notification
+        setTimeout(function() {
+            notification.style.display = "none";  // Hide the notification after 3 seconds
+        }, 3000);
+    </script>
+    {% endif %}
+</body>
+</html>
