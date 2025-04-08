@@ -39,3 +39,14 @@ class Sales(models.Model):
         unique_together = ('store', 'date')
         return f"Sales for Store {self.store.store_id} on {self.date}"
     
+
+class Inventory(models.Model):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Inventory for Store {self.store.id}"
+    
+
+    

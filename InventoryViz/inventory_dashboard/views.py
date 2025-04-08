@@ -5,9 +5,10 @@ from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import SalesForm  
-from .models import Sales  
+from .models import Sales, Store, Inventory  
 from datetime import datetime  
 from django.urls import reverse
+from django.http import JsonResponse
 
 
 @ratelimit(key="ip", rate="5/m", method="POST", block=True)  # Rate limit to prevent brute-force
@@ -113,3 +114,20 @@ def edit_sales(request, store, date):
         'store': store,
         'date': date,
     })
+
+def process_sale(store_id, sold_quantity):
+    try:
+        # Retrieve store and its inventory
+        store = Store.objects.get(id=store_id)
+        inventory_item = Inventory.objects.get(store=store)
+        
+        # Update inventory quantity
+        inventory_item.quantity -= sold_quantity
+        inventory_item.save()
+
+        return JsonResponse({'success': True, 'message': 'Inventory updated successfully'})
+    except Inventory.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Inventory for the store not found'})
+    except Store.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Store not found'})
+
