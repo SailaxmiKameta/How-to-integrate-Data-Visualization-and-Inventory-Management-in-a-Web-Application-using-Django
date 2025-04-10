@@ -7,8 +7,13 @@ from django.contrib.auth.models import User
 from .forms import SalesForm  
 from .models import Sales, Store, Inventory  
 from datetime import datetime  
+from django.db.models.functions import ExtractYear, ExtractMonth
+from django.db.models import Sum, Avg
 from django.urls import reverse
 from django.http import JsonResponse
+import logging
+import pandas as pd
+import plotly.express as px
 
 
 @ratelimit(key="ip", rate="5/m", method="POST", block=True)  # Rate limit to prevent brute-force
@@ -130,4 +135,72 @@ def process_sale(store_id, sold_quantity):
         return JsonResponse({'success': False, 'message': 'Inventory for the store not found'})
     except Store.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Store not found'})
+    
 
+def sales_dashboard(request):
+    # 1. Total Sales Over Time
+    daily_sales = Sales.objects.values('date').annotate(total_sales=Sum('sales')).order_by('date')
+    df_sales = pd.DataFrame(list(daily_sales))
+    df_sales['date'] = pd.to_datetime(df_sales['date'])
+    sales_time_fig = px.line(df_sales, x='date', y='total_sales', title='Sales Trend Over Time', labels={'date': 'Date', 'total_sales': 'Total Sales'})
+    
+    # 2. Sales with/without Promotion
+    promo_sales = Sales.objects.values('promo').annotate(total_sales=Sum('sales')).order_by('promo')
+    df_promo_sales = pd.DataFrame(list(promo_sales))
+    promo_sales_fig = px.bar(df_promo_sales, x='promo', y='total_sales', title='Sales with/without Promotion', labels={'promo': 'Promotion Status', 'total_sales': 'Total Sales'})
+    promo_sales_fig.update_xaxes(tickmode='array', tickvals=[0, 1], ticktext=['No Promo', 'Promo'])
+
+    # 3. Seasonal Trends (Monthly and Yearly)
+    monthly_sales = Sales.objects.annotate(year=ExtractYear('date'), month=ExtractMonth('date')) \
+                                 .values('year', 'month') \
+                                 .annotate(total_sales=Sum('sales')) \
+                                 .order_by('year', 'month')
+    df_monthly_sales = pd.DataFrame(list(monthly_sales))
+    pivot_sales = df_monthly_sales.pivot(index='month', columns='year', values='total_sales')
+    seasonal_sales_fig = px.imshow(pivot_sales, title='Sales Trend Heatmap (Monthly and Yearly)', labels=dict(x="Year", y="Month", color="Total Sales"))
+
+    # 4. Average Sales by Store Type
+    avg_sales_by_type = Sales.objects.select_related('store').values('store__store_type') \
+                                     .annotate(avg_sales=Avg('sales')).order_by('store__store_type')
+    df_avg_sales = pd.DataFrame(list(avg_sales_by_type))
+    avg_sales_fig = px.bar(df_avg_sales, x='store__store_type', y='avg_sales', title='Average Sales by Store Type', labels={'store__store_type': 'Store Type', 'avg_sales': 'Average Sales'})
+
+    # 5. Sales Distribution Histogram
+    all_sales = Sales.objects.values_list('sales', flat=True)
+    df_sales_dist = pd.DataFrame({'sales': list(all_sales)})
+    sales_dist_fig = px.histogram(df_sales_dist, x='sales', nbins=20, title='Sales Distribution Histogram')
+
+    # 6. Promotion vs No Promotion (Box Plot)
+    promo_vs_non = Sales.objects.values('promo', 'sales')
+    df_promo_box = pd.DataFrame(list(promo_vs_non))
+    df_promo_box['promo'] = df_promo_box['promo'].replace({0: 'No Promo', 1: 'Promo'})
+    promo_box_fig = px.box(df_promo_box, x='promo', y='sales', title='Sales Spread: Promotion vs No Promotion', labels={'promo': 'Promotion Status', 'sales': 'Sales'})
+
+    # 7. Yearly Sales Overview
+    yearly_sales = Sales.objects.annotate(year=ExtractYear('date')) \
+                                .values('year') \
+                                .annotate(total_sales=Sum('sales')) \
+                                .order_by('year')
+    df_yearly = pd.DataFrame(list(yearly_sales))
+    yearly_sales_fig = px.bar(df_yearly, x='year', y='total_sales', title='Yearly Sales Overview', labels={'year': 'Year', 'total_sales': 'Total Sales'})
+
+    # 8. Monthly Average Sales
+    monthly_avg_sales = Sales.objects.annotate(month=ExtractMonth('date')) \
+                                     .values('month') \
+                                     .annotate(avg_sales=Avg('sales')) \
+                                     .order_by('month')
+    df_monthly_avg = pd.DataFrame(list(monthly_avg_sales))
+    monthly_avg_fig = px.line(df_monthly_avg, x='month', y='avg_sales', title='Average Sales per Month', labels={'month': 'Month', 'avg_sales': 'Average Sales'})
+
+    return render(request, 'inventory_dashboard/dashboard.html', {
+        'sales_time_fig': sales_time_fig.to_html(full_html=False),
+        'promo_sales_fig': promo_sales_fig.to_html(full_html=False),
+        'seasonal_sales_fig': seasonal_sales_fig.to_html(full_html=False),
+        'avg_sales_fig': avg_sales_fig.to_html(full_html=False),
+        'sales_dist_fig': sales_dist_fig.to_html(full_html=False),
+        'promo_box_fig': promo_box_fig.to_html(full_html=False),
+        'yearly_sales_fig': yearly_sales_fig.to_html(full_html=False),
+        'monthly_avg_fig': monthly_avg_fig.to_html(full_html=False),
+        'stores': Store.objects.all(),
+    })
+    
