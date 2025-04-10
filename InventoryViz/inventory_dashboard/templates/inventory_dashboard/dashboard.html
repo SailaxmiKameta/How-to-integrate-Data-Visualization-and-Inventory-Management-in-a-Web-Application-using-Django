@@ -4,28 +4,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #007bff;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        /* Visualization Container */
+        .visualization-container {
+            background-color: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+        }
+
+        /* Header for each section */
+        .visualization-container h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        /* Buttons and Links */
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkred;
+        }
+
+        /* Logout Button in Navbar */
+        .logout-btn {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background-color: darkred;
+        }
+
+        /* Link Styling */
+        .section-link {
+            font-size: 18px;
+            color: #007bff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .section-link:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
-<body style="margin: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+<body>
 
     <!-- Navigation Bar -->
-    <nav style="background-color: #007bff; padding: 15px; text-align: center; color: white; font-size: 20px;">
-        Manager Dashboard
+    <nav>
+        <div>Manager Dashboard</div>
+        <!-- Logout Button on Navbar -->
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
     </nav>
 
     <!-- Main Container -->
-    <div style="display: flex; justify-content: center; align-items: center; height: 80vh; flex-direction: column;">
-
+    <div class="main-container">
         <h2 style="color: #333;">Welcome, Manager!</h2>
 
-        <a href="{% url 'add_sales' %}">Add Sales Data</a>
-
-        <!-- Logout Button -->
-        <a href="{% url 'logout' %}" style="margin-top: 20px; text-decoration: none;">
-            <button style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
-                Logout
-            </button>
+        <!-- Add Sales Data Link -->
+        <a href="{% url 'add_sales' %}" style="background-color: #28a745; color: white; padding: 10px 20px; border-radius: 5px; font-size: 16px; text-decoration: none;">
+            Add Sales Data
         </a>
 
+        <!-- Visualization Sections -->
+        <div class="visualization-container">
+            <h2><a href="{% url 'sales_dashboard' %}" class="section-link">Total Sales Over Time</a></h2>
+            {{ sales_time_fig|safe }}
+        </div>
+
+        <div class="visualization-container">
+            <h2><a href="{% url 'sales_dashboard' %}" class="section-link">Sales with/without Promotion</a></h2>
+            {{ promo_sales_fig|safe }}
+        </div>
+
+        <div class="visualization-container">
+            <h2><a href="{% url 'sales_dashboard' %}" class="section-link">Sales Trend Heatmap (Monthly and Yearly)</a></h2>
+            {{ seasonal_sales_fig|safe }}
+        </div>
+
+        <div class="visualization-container">
+            <h2><a href="{% url 'sales_dashboard' %}" class="section-link">Average Sales by Store Type</a></h2>
+            {{ avg_sales_fig|safe }}
+        </div>
+
+        <div class="visualization-container">
+            <h2><a href="{% url 'sales_dashboard' %}" class="section-link">Sales Distribution Histogram</a></h2>
+            {{ sales_dist_fig|safe }}
+        </div>
+
+        <div class="visualization-container">
+            <h2><a href="{% url 'sales_dashboard' %}" class="section-link">Sales Spread: Promotion vs No Promotion</a></h2>
+            {{ promo_box_fig|safe }}
+        </div>
+
+        <div class="visualization-container">
+            <h2><a href="{% url 'sales_dashboard' %}" class="section-link">Monthly Average Sales</a></h2>
+            {{ monthly_avg_fig|safe }}
+        </div>
     </div>
 
 </body>
