@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login_view, manager_dashboard, logout_view, register, add_sales, edit_sales
+from .views import login_view, manager_dashboard, logout_view, register, add_sales, edit_sales, sales_dashboard
 
 urlpatterns = [
      
@@ -9,5 +9,6 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('add-sales/', add_sales, name='add_sales'), 
     path('edit/<int:store>/<str:date>/', edit_sales, name='edit_sales'),
+    path("sales-dashboard/", sales_dashboard, name="sales_dashboard"),
 
 ]
