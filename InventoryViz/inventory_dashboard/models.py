@@ -44,9 +44,19 @@ class Inventory(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
         return f"Inventory for Store {self.store.id}"
-    
 
-    
+
+class Forecast(models.Model):
+    store_id = models.IntegerField()
+    date = models.DateField()
+    forecasted_sales = models.FloatField()
+
+    class Meta:
+        # Prevent duplicates for the same store and date
+        unique_together = ('store_id', 'date')  
+
+    def __str__(self):
+        return f"Store {self.store_id} - {self.date} : {self.forecasted_sales}"
