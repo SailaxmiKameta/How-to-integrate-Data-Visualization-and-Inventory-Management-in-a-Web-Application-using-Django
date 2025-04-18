@@ -1,3 +1,5 @@
+import os
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -203,4 +205,29 @@ def sales_dashboard(request):
         'monthly_avg_fig': monthly_avg_fig.to_html(full_html=False),
         'stores': Store.objects.all(),
     })
-    
+
+
+@login_required
+def forecast_viewer(request):
+    plots_dir = os.path.join(settings.MEDIA_ROOT, 'forecast_plots')
+    csv_dir = os.path.join(settings.MEDIA_ROOT, 'forecast_csv')
+
+    stores = []
+    for file in os.listdir(plots_dir):
+        if file.startswith('store_') and file.endswith('.png'):
+            store_id = file.split('_')[1]
+            stores.append(store_id)
+
+    selected_store = request.GET.get('store')
+    plot_url = csv_url = None
+
+    if selected_store:
+        plot_url = os.path.join(settings.MEDIA_URL, f'forecast_plots/store_{selected_store}_forecast.png')
+        csv_url = os.path.join(settings.MEDIA_URL, f'forecast_csv/store_{selected_store}_forecast.csv')
+
+    return render(request, 'inventory_dashboard/forecast_viewer.html', {
+        'stores': sorted(set(stores)),
+        'selected_store': selected_store,
+        'plot_url': plot_url,
+        'csv_url': csv_url,
+    })

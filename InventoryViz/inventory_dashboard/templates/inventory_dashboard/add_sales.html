@@ -2,27 +2,39 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Sales Data Input</title>
 
-    <!-- Link to Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Styles for Animations -->
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 font-sans antialiased">
 
-    <div class="min-h-screen flex items-center justify-center bg-gray-50">
-        <div class="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+        <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-xl w-full fade-in">
 
-            <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Enter Sales Data</h1>
+            <!-- Heading -->
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">📋 Enter Sales Data</h1>
 
-            <!-- Display Messages -->
+            <!-- Django Messages -->
             {% if messages %}
-                <div class="mb-4">
+                <div class="mb-4 space-y-2">
                     {% for message in messages %}
-                        <div class="p-4 mb-4 text-green-700 bg-green-100 rounded-md">
-                            {{ message }}
+                        <div class="p-4 text-green-800 bg-green-100 border border-green-300 rounded-lg shadow-sm fade-in">
+                            ✅ {{ message }}
                         </div>
                     {% endfor %}
                 </div>
@@ -31,13 +43,17 @@
             <!-- Sales Data Form -->
             <form method="POST" class="space-y-6">
                 {% csrf_token %}
+                
+                <!-- Render Django form fields -->
                 <div class="space-y-4">
                     {{ form.as_p }}
                 </div>
 
+                <!-- Submit Button -->
                 <div class="text-center">
-                    <button type="submit" class="w-full py-3 px-6 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        Submit
+                    <button type="submit"
+                        class="w-full py-3 px-6 bg-blue-600 text-white rounded-md font-semibold shadow hover:bg-blue-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        🚀 Submit
                     </button>
                 </div>
             </form>

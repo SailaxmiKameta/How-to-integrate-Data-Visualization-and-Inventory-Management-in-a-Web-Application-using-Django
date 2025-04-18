@@ -1,3 +1,4 @@
+from django.conf import settings
 import pandas as pd
 import numpy as np
 import os
@@ -63,7 +64,7 @@ def plot_forecast(test, forecast, best_rmse, forecast_30_days=None, store_id=Non
     #plt.savefig(f"arima_forecast_store_{store_id}.png")
     #plt.close()
 
-    save_dir = os.path.join(os.getcwd(), 'forecast_plots')
+    save_dir = os.path.join(settings.MEDIA_ROOT, 'forecast_plots')
     os.makedirs(save_dir, exist_ok=True)
 
     # Save the plot
@@ -78,7 +79,7 @@ def prepare_future_exog(exog_df, forecast_dates):
     return future_exog
 
 def save_forecast_to_csv(forecast_30_days_df, store_id):
-    save_dir = os.path.join(os.getcwd(), 'forecast_csv')
+    save_dir = os.path.join(settings.MEDIA_ROOT, 'forecast_csv')
     os.makedirs(save_dir, exist_ok=True)  # Create dir if not exists
 
     file_path = os.path.join(save_dir, f'store_{store_id}_forecast.csv')

@@ -3,39 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register New Manager</title>
+    <title>Register Manager</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Optional: Background image using Tailwind config -->
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
 </head>
-<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f4; margin: 0;">
+<body class="min-h-screen flex items-center justify-center bg-cover bg-center font-sans">
 
-    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); width: 300px; text-align: center;">
-        <h2 style="margin-bottom: 20px; color: #333;">Register Manager</h2>
+    <div class="bg-white bg-opacity-90 p-8 rounded-xl shadow-xl w-full max-w-md backdrop-blur">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Register Manager</h2>
 
-        {% for message in messages %}
-            <p style="color: red;">{{ message }}</p>
-        {% endfor %}
+        <!-- Display messages -->
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="p-3 text-sm text-red-600 bg-red-100 rounded">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-        <form method="post" style="display: flex; flex-direction: column; gap: 15px;">
+        <form method="post" class="space-y-5">
             {% csrf_token %}
             
-            <input type="text" name="username" placeholder="Username" required 
-                style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+            <input type="text" name="username" placeholder="Username" required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             
-            <input type="email" name="email" placeholder="Email" required 
-                style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+            <input type="email" name="email" placeholder="Email" required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             
-            <input type="password" name="password1" placeholder="Password" required 
-                style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+            <input type="password" name="password1" placeholder="Password" required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             
-            <input type="password" name="password2" placeholder="Confirm Password" required 
-                style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+            <input type="password" name="password2" placeholder="Confirm Password" required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             
-            <button type="submit" 
-                style="background-color: #007bff; color: white; padding: 10px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+            <button type="submit"
+                    class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition">
                 Register
             </button>
         </form>
 
-        <p style="margin-top: 10px;">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        <p class="text-center text-sm mt-4 text-gray-600">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Login</a>
+        </p>
     </div>
 
 </body>
