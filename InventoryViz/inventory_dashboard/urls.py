@@ -15,6 +15,6 @@ urlpatterns = [
     path('forecast-viewer/', forecast_viewer, name='forecast_viewer'),
     path('inventory/', views.inventory_dashboard, name='inventory_dashboard'),
     path('inventory/edit/<int:inventory_id>/', views.edit_inventory, name='edit_inventory'),
-    path('inventory/sale/<int:store_id>/<int:sold_quantity>/', views.process_sale, name='process_sale'),
+    
 
 ]
