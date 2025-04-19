@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Dashboard</title>
+    <script src="https://cdn.tailwindcss.com">
+        
+    </script>
+    
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-5xl mx-auto bg-white p-6 rounded-xl shadow-md">
+        <h1 class="text-2xl font-bold mb-6 flex items-center gap-2 text-blue-700">
+            📦 Inventory Dashboard
+        </h1>
+
+        {% if low_stock_alerts %}
+            <div class="bg-red-100 text-red-800 p-4 rounded mb-6">
+                <strong>⚠ Low Stock Alerts:</strong>
+                <ul class="list-disc pl-5">
+                    {% for item in low_stock_alerts %}
+                        <li>Store {{ item.store.store_id }} - Only {{ item.quantity }} units left</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <table class="w-full table-auto border-collapse">
+            <thead>
+                <tr class="bg-gray-200 text-left">
+                    <th class="p-2 border">Store</th>
+                    <th class="p-2 border">Quantity</th>
+                    <th class="p-2 border">Last Updated</th>
+                    <th class="p-2 border">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inv in inventories %}
+                <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="p-2 border">{{ inv.store.store_id }}</td>
+                    <td class="p-2 border">{{ inv.quantity }}</td>
+                    <td class="p-2 border">{{ inv.last_updated }}</td>
+                    <td class="p-2 border">
+                        <a href="{% url 'edit_inventory' inv.id %}" class="text-blue-600 hover:underline flex items-center gap-1">
+                            ✏️ Edit
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+

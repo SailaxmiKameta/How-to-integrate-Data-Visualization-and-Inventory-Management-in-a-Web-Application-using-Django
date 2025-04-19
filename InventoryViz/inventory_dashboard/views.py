@@ -1,12 +1,12 @@
 import os
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import SalesForm  
+from .forms import InventoryForm, SalesForm  
 from .models import Sales, Store, Inventory  
 from datetime import datetime  
 from django.db.models.functions import ExtractYear, ExtractMonth
@@ -231,3 +231,26 @@ def forecast_viewer(request):
         'plot_url': plot_url,
         'csv_url': csv_url,
     })
+
+LOW_STOCK_THRESHOLD = 15000
+def inventory_dashboard(request):
+    inventories = Inventory.objects.select_related('store').all()
+    low_stock_alerts = inventories.filter(quantity__lt=LOW_STOCK_THRESHOLD)
+    context = {
+        'inventories': inventories,
+        'low_stock_alerts': low_stock_alerts,
+    }
+    return render(request, 'inventory_dashboard.html', context)
+
+
+def edit_inventory(request, inventory_id):
+    inventory = get_object_or_404(Inventory, id=inventory_id)
+    if request.method == 'POST':
+        form = InventoryForm(request.POST, instance=inventory)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Inventory updated successfully!')
+            return redirect('inventory_dashboard')
+    else:
+        form = InventoryForm(instance=inventory)
+    return render(request, 'edit_inventory.html', {'form': form, 'inventory': inventory})

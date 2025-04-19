@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
-from .models import Sales
+from .models import Inventory, Sales
 
 
 class LoginForm(AuthenticationForm):
@@ -16,3 +16,8 @@ class SalesForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'type': 'date'}),
             'sales': forms.NumberInput(attrs={'step': '0.01'}),
         }
+
+class InventoryForm(forms.ModelForm):
+    class Meta:
+        model = Inventory
+        fields = ['quantity']

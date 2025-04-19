@@ -57,6 +57,11 @@
                 <a href="{% url 'forecast_viewer' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded shadow">
                     📈 View Forecasts
                 </a>
+                {% if store and date %}
+                    <a href="{% url 'edit_sales' store date %}" class="...">
+                        ✏️ Edit Sales Data
+                    </a>
+                {% endif %}
             </div>
         </div>
 
