@@ -26,7 +26,7 @@ class Command(BaseCommand):
         store_id = options.get('store')
 
         if store_id is None:
-            self.stdout.write(self.style.ERROR("Please provide a --store argument or id."))
+            self.stdout.write(self.style.ERROR("Please provide a --store id."))
             return
 
         checkpoint_file = 'forecast_checkpoint.csv'

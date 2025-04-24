@@ -254,3 +254,11 @@ def edit_inventory(request, inventory_id):
     else:
         form = InventoryForm(instance=inventory)
     return render(request, 'edit_inventory.html', {'form': form, 'inventory': inventory})
+
+def delete_inventory(request, inventory_id):
+    inventory = get_object_or_404(Inventory, id=inventory_id)
+    if request.method == 'POST':
+        inventory.delete()
+        messages.success(request, 'Inventory deleted successfully!')
+        return redirect('inventory_dashboard')
+    return render(request, 'confirm_delete_inventory.html', {'inventory': inventory})
