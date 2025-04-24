@@ -18,6 +18,9 @@ import pandas as pd
 import plotly.express as px
 
 
+def home(request):
+    return render(request, 'home.html')
+
 @ratelimit(key="ip", rate="5/m", method="POST", block=True)  # Rate limit to prevent brute-force
 def login_view(request):
     if request.method == "POST":
