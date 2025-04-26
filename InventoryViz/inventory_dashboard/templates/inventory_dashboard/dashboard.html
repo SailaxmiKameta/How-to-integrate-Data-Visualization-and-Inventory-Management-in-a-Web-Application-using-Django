@@ -92,12 +92,20 @@
             <!-- Chart 3 -->
             <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
                 <h2 class="text-xl font-semibold mb-3 text-blue-600">
-                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Sales Trend Heatmap</a>
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Monthly Sales Trend (Year-over-Year Line Plot)</a>
                 </h2>
-                {{ seasonal_sales_fig|safe }}
+                {{ monthly_sales_fig|safe }}
             </div>
 
             <!-- Chart 4 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Daily Sales Heatmap (Day vs Month)</a>
+                </h2>
+                {{ heatmap_fig|safe }}
+            </div>
+
+            <!-- Chart 5 -->
             <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
                 <h2 class="text-xl font-semibold mb-3 text-blue-600">
                     <a href="{% url 'sales_dashboard' %}" class="hover:underline">Average Sales by Store Type</a>
@@ -105,7 +113,7 @@
                 {{ avg_sales_fig|safe }}
             </div>
 
-            <!-- Chart 5 -->
+            <!-- Chart 6 -->
             <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
                 <h2 class="text-xl font-semibold mb-3 text-blue-600">
                     <a href="{% url 'sales_dashboard' %}" class="hover:underline">Sales Distribution Histogram</a>
@@ -113,15 +121,16 @@
                 {{ sales_dist_fig|safe }}
             </div>
 
-            <!-- Chart 6 -->
-            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
-                <h2 class="text-xl font-semibold mb-3 text-blue-600">
-                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Promo vs No Promo Boxplot</a>
-                </h2>
-                {{ promo_box_fig|safe }}
-            </div>
 
             <!-- Chart 7 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in col-span-1 md:col-span-2">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Total Sales per Year</a>
+                </h2>
+                {{ yearly_sales_fig|safe }}
+            </div>
+
+            <!-- Chart 8 -->
             <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in col-span-1 md:col-span-2">
                 <h2 class="text-xl font-semibold mb-3 text-blue-600">
                     <a href="{% url 'sales_dashboard' %}" class="hover:underline">Monthly Average Sales</a>
