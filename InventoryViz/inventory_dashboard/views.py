@@ -17,6 +17,7 @@ import logging
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from django.contrib.auth import get_user_model
 
 
 def home(request):
@@ -43,6 +44,8 @@ def logout_view(request):
 @login_required
 def manager_dashboard(request):
     return render(request, "inventory_dashboard/dashboard.html")
+
+User = get_user_model()
 
 def register(request):
     if request.method == "POST":
