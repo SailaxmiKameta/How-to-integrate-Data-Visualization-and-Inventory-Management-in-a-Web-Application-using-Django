@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Inventory Dashboard</title>
-    <script src="https://cdn.tailwindcss.com">
-        
-    </script>
-    
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-6">
     <div class="max-w-5xl mx-auto bg-white p-6 rounded-xl shadow-md">
@@ -29,22 +26,24 @@
             <thead>
                 <tr class="bg-gray-200 text-left">
                     <th class="p-2 border">Store</th>
+                    <th class="p-2 border">Category</th>
                     <th class="p-2 border">Quantity</th>
                     <th class="p-2 border">Last Updated</th>
                     <th class="p-2 border">Action</th>
                 </tr>
             </thead>
             <tbody>
-                {% for inv in inventories %}
+                {% for dummy in dummy_category_inventories %}
                 <tr class="bg-white border-b hover:bg-gray-50">
-                    <td class="p-2 border">{{ inv.store.store_id }}</td>
-                    <td class="p-2 border">{{ inv.quantity }}</td>
-                    <td class="p-2 border">{{ inv.last_updated }}</td>
+                    <td class="p-2 border">{{ dummy.store.store_id }}</td>
+                    <td class="p-2 border">{{ dummy.category_name }}</td>
+                    <td class="p-2 border">{{ dummy.quantity }}</td>
+                    <td class="p-2 border">{{ dummy.last_updated }}</td>
                     <td class="p-2 border">
-                        <a href="{% url 'edit_inventory' inv.id %}" class="text-blue-600 hover:underline flex items-center gap-1">
+                        <a href="{% url 'edit_inventory' dummy.id %}" class="text-blue-600 hover:underline flex items-center gap-1">
                             ✏️ Edit
                         </a> 
-                        <form action="{% url 'delete_inventory' inv.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this inventory?');">
+                        <form action="{% url 'delete_inventory' dummy.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this inventory?');">
                             {% csrf_token %}
                             <button type="submit" class="text-red-600 hover:underline flex items-center gap-1">
                                 🗑️ Delete
@@ -58,5 +57,3 @@
     </div>
 </body>
 </html>
-
-

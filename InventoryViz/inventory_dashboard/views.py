@@ -7,7 +7,7 @@ from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import InventoryForm, SalesForm  
-from .models import Sales, Store, Inventory  
+from .models import DummyCategoryInventory, Sales, Store, Inventory  
 from datetime import datetime  
 from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay
 from django.db.models import Sum, Avg
@@ -259,10 +259,11 @@ def forecast_viewer(request):
 
 LOW_STOCK_THRESHOLD = 15000
 def inventory_dashboard(request):
-    inventories = Inventory.objects.select_related('store').all()
-    low_stock_alerts = inventories.filter(quantity__lt=LOW_STOCK_THRESHOLD)
+    dummy_category_inventories = DummyCategoryInventory.objects.all()
+    
+    low_stock_alerts = dummy_category_inventories.filter(quantity__lt=LOW_STOCK_THRESHOLD)
     context = {
-        'inventories': inventories,
+        'dummy_category_inventories': dummy_category_inventories,
         'low_stock_alerts': low_stock_alerts,
     }
     return render(request, 'inventory_dashboard.html', context)
