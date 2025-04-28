@@ -6,17 +6,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-6">
-    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md">
-        <h2 class="text-xl font-semibold mb-4 text-blue-700 flex items-center gap-2">
-            ✏️ Edit Inventory for Store {{ inventory.store.store_id }}
-        </h2>
+    <div class="max-w-5xl mx-auto bg-white p-6 rounded-xl shadow-md">
+        <h1 class="text-2xl font-bold mb-6 text-blue-700">
+            ✏️ Edit Inventory for {{ dummy_inventory.category_name }}
+        </h1>
 
-        <form method="POST" class="space-y-4">
+        <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
-                📀 Save Changes
-            </button>
+            <button type="submit" class="bg-blue-600 text-white p-2 rounded">Save Changes</button>
         </form>
     </div>
 </body>

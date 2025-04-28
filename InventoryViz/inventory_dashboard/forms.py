@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
-from .models import Inventory, Sales
+from .models import DummyCategoryInventory, Inventory, Sales
 
 
 class LoginForm(AuthenticationForm):
@@ -21,3 +21,9 @@ class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
         fields = ['quantity']
+
+
+class DummyCategoryInventoryForm(forms.ModelForm):
+    class Meta:
+        model = DummyCategoryInventory
+        fields = ['store', 'category_name', 'quantity']

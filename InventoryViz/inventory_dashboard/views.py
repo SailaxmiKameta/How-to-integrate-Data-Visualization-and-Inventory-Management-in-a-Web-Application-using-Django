@@ -6,7 +6,7 @@ from django.contrib import messages
 from django_ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import InventoryForm, SalesForm  
+from .forms import DummyCategoryInventoryForm, InventoryForm, SalesForm  
 from .models import DummyCategoryInventory, Sales, Store, Inventory  
 from datetime import datetime  
 from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay
@@ -270,21 +270,21 @@ def inventory_dashboard(request):
 
 
 def edit_inventory(request, inventory_id):
-    inventory = get_object_or_404(Inventory, id=inventory_id)
+    dummy_inventory = get_object_or_404(DummyCategoryInventory, id=inventory_id)
     if request.method == 'POST':
-        form = InventoryForm(request.POST, instance=inventory)
+        form = DummyCategoryInventoryForm(request.POST, instance=dummy_inventory)
         if form.is_valid():
             form.save()
             messages.success(request, 'Inventory updated successfully!')
             return redirect('inventory_dashboard')
     else:
-        form = InventoryForm(instance=inventory)
-    return render(request, 'edit_inventory.html', {'form': form, 'inventory': inventory})
+        form = DummyCategoryInventoryForm(instance=dummy_inventory)
+    return render(request, 'edit_inventory.html', {'form': form, 'dummy_inventory': dummy_inventory})
 
 def delete_inventory(request, inventory_id):
-    inventory = get_object_or_404(Inventory, id=inventory_id)
+    dummy_inventory = get_object_or_404(DummyCategoryInventory, id=inventory_id)
     if request.method == 'POST':
-        inventory.delete()
+        dummy_inventory.delete()
         messages.success(request, 'Inventory deleted successfully!')
         return redirect('inventory_dashboard')
-    return render(request, 'confirm_delete_inventory.html', {'inventory': inventory})
+    return render(request, 'confirm_delete_inventory.html', {'dummy_inventory': dummy_inventory})
