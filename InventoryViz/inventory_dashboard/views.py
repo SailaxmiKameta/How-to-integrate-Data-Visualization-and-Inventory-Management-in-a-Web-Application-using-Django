@@ -198,7 +198,7 @@ def sales_dashboard(request):
     yearly_sales_fig = px.bar(df_yearly, x='year', y='total_sales', text='total_sales',
                               title='Total Sales per Year', labels={'year': 'Year', 'total_sales': 'Total Sales'})
 
-    # 8. Monthly Average Sales (Line Plot)
+    # 7. Monthly Average Sales (Line Plot)
     monthly_avg_sales = Sales.objects.annotate(month=ExtractMonth('date')) \
                                      .values('month') \
                                      .annotate(avg_sales=Avg('sales')) \

@@ -35,7 +35,8 @@ def evaluate_arima_model(train, test, train_exog, test_exog):
     model_fit = model.fit()
     forecast_log = model_fit.forecast(steps=len(test), exog=test_exog)
     forecast = np.expm1(forecast_log)
-    error = rmse(test, forecast)
+    #error = rmse(test, forecast)
+    error = np.sqrt(np.mean((np.array(test) - np.array(forecast))**2))
     print(f"Best ARIMA Model: {best_arima.order} with RMSE: {error:.2f}")
     return model_fit, forecast, error
 
