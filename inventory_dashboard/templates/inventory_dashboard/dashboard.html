@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Dashboard</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN for Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <!-- Custom CSS for animations -->
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-out forwards;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans leading-relaxed tracking-wide">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white px-6 py-4 flex justify-between items-center sticky top-0 shadow-md z-50">
+        <h1 class="text-2xl font-bold flex items-center gap-2">
+            <i class="fas fa-chart-line"></i> Manager Dashboard
+        </h1>
+        <a href="{% url 'logout' %}" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-sm font-medium transition">
+            Logout
+        </a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 md:px-8 py-10">
+
+        <!-- Welcome Text and Actions -->
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-gray-800">Welcome, Manager 👋</h2>
+            <p class="text-gray-500 mt-2">Monitor your store’s performance and explore insights below.</p>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 mt-6">
+                <a href="{% url 'add_sales' %}" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded shadow">
+                    ➕ Add Sales Data
+                </a>
+                <a href="{% url 'forecast_viewer' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded shadow">
+                    📈 View Forecasts
+                </a>
+                {% if store and date %}
+                    <a href="{% url 'edit_sales' store date %}" class="...">
+                        ✏️ Edit Sales Data
+                    </a>
+                {% endif %}
+                <a href="{% url 'inventory_dashboard' %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded shadow">
+                    📦 Manage Inventory
+                </a>
+            </div>
+        </div>
+
+        
+
+        <!-- 🧠 Visualization Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Chart 1 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Total Sales Over Time</a>
+                </h2>
+                {{ sales_time_fig|safe }}
+            </div>
+
+            <!-- Chart 2 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Sales with/without Promotion</a>
+                </h2>
+                {{ promo_sales_fig|safe }}
+            </div>
+
+            <!-- Chart 3 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Monthly Sales Trend (Year-over-Year Line Plot)</a>
+                </h2>
+                {{ monthly_sales_fig|safe }}
+            </div>
+
+            <!-- Chart 4 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Daily Sales Heatmap (Day vs Month)</a>
+                </h2>
+                {{ heatmap_fig|safe }}
+            </div>
+
+            <!-- Chart 5 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Average Sales by Store Type</a>
+                </h2>
+                {{ avg_sales_fig|safe }}
+            </div>
+
+            <!-- Chart 6 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Sales Distribution Histogram</a>
+                </h2>
+                {{ sales_dist_fig|safe }}
+            </div>
+
+
+            <!-- Chart 7 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in col-span-1 md:col-span-2">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Total Sales per Year</a>
+                </h2>
+                {{ yearly_sales_fig|safe }}
+            </div>
+
+            <!-- Chart 8 -->
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover animate-fade-in col-span-1 md:col-span-2">
+                <h2 class="text-xl font-semibold mb-3 text-blue-600">
+                    <a href="{% url 'sales_dashboard' %}" class="hover:underline">Monthly Average Sales</a>
+                </h2>
+                {{ monthly_avg_fig|safe }}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

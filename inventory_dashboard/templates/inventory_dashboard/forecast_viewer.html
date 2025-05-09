@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forecast Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #loading-spinner {
+            display: none;
+        }
+        #forecast-img {
+            display: none;
+        }
+
+        /* Soft animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, #e0f2fe, #fef9c3, #f3e8ff);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Toast message */
+        #toast {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-transparent min-h-screen p-4 sm:p-6 font-sans overflow-x-hidden">
+
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-6 sm:p-8 backdrop-blur-md bg-opacity-90">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold text-blue-700 flex items-center gap-2">
+                📈 Forecast Viewer
+            </h2>
+            <a href="{% url 'dashboard' %}"
+               class="text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-4 py-2 rounded-lg transition duration-200">
+                🔙 Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Store Selection -->
+        <form method="get" class="mb-6">
+            <label for="store" class="block text-gray-700 font-medium mb-2">Select Store:</label>
+            <select name="store" id="store" onchange="this.form.submit()"
+                    class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">-- Choose Store --</option>
+                {% for store_id in stores %}
+                    <option value="{{ store_id }}" {% if store_id == selected_store %}selected{% endif %}>
+                        Store {{ store_id }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <!-- Forecast Display -->
+        {% if selected_store %}
+            <div class="mt-10">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+                    📊 Forecast for Store {{ selected_store }}
+                </h3>
+
+                <!-- Spinner while loading -->
+                <div id="loading-spinner" class="flex justify-center items-center h-40">
+                    <svg class="animate-spin h-10 w-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor"
+                              d="M4 12a8 8 0 018-8v8z"></path>
+                    </svg>
+                </div>
+
+                <!-- Plot Image -->
+                <div class="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden shadow-md">
+                    <img id="forecast-img"
+                         src="{{ plot_url }}"
+                         alt="Forecast Plot"
+                         class="w-full h-auto transform transition-transform duration-300 hover:scale-105"
+                         onload="hideSpinner()">
+                </div>
+
+                <!-- Download CSV -->
+                <div class="mt-6 flex items-center gap-4">
+                    <a href="{{ csv_url }}" download onclick="showToast()"
+                       class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                        ⬇️ Download Forecast CSV
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg text-sm z-50 transition-opacity duration-300">
+        ✅ Forecast CSV downloaded
+    </div>
+
+    <script>
+        function hideSpinner() {
+            document.getElementById('loading-spinner').style.display = 'none';
+            document.getElementById('forecast-img').style.display = 'block';
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 2000);
+            setTimeout(() => {
+                toast.style.display = 'none';
+                toast.style.opacity = '1';
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
