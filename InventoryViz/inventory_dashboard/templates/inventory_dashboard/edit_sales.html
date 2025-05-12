@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Sales Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-xl">
+        <!-- Title with icon -->
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5M18.5 2.5L13 8l-1 4 4-1 5.5-5.5L18.5 2.5z" />
+            </svg>
+            Edit Sales Data
+        </h1>
+
+        <!-- Notification -->
+        <div id="notification" class="hidden bg-green-500 text-white text-center p-4 rounded mb-4 flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Sales data updated successfully!</span>
+        </div>
+
+        <!-- Django Form -->
+        <form method="POST" action="{% url 'edit_sales' store date %}" class="space-y-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <!-- Submit button with icon -->
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M4 12l8-8m0 0l8 8m-8-8v16" />
+                </svg>
+                Update Sales
+            </button>
+        </form>
+
+        <!-- Optional success messages -->
+        {% if messages %}
+            <ul class="mt-4">
+                {% for message in messages %}
+                    <li class="text-green-600 text-center font-medium">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <!-- Notification Script -->
+    {% if messages %}
+    <script>
+        const notification = document.getElementById("notification");
+        notification.classList.remove("hidden");
+        setTimeout(() => {
+            notification.classList.add("hidden");
+        }, 3000);
+    </script>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,1 @@
+# How-to-integrate-Data-Visualization-and-Inventory-Management-in-a-Web-Application-using-Django
